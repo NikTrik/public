@@ -2,7 +2,7 @@ import * as React from 'react';
 import { View } from 'react-native';
 import { RadioButton } from 'react-native-paper';
 import styles from '../Style/Style';
-
+// Пока в разработке
 export default RadioButton = () => {
     const [checked, setChecked] = React.useState('Дашборд');
 

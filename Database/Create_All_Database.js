@@ -40,7 +40,7 @@ function openDatabase() {
         };
     }
 
-    const db = SQLite.openDatabase("tile_26.db");
+    const db = SQLite.openDatabase("tile_27.db");
     return db;
 }
 

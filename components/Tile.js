@@ -12,7 +12,7 @@ export default function Tile({ Result }) {
                 data={Result}
                 extraData={Result}
                 renderItem={({ item }) =>
-                    <Post title={item.fullname} imageUrl={item.category_id} un={item.Un_of_meas} color={item.color} />}
+                    <Post title={item.fullname} CategoryId={item.category_id} un={item.Un_of_meas} color={item.color} />}
             />
             <StatusBar theme="auto" />
         </View>

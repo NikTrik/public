@@ -7,7 +7,7 @@ import { Settings_Menu } from './Settings_Menu';
 
 export default function Header_Tile({ navigation, title }) {
     return (
-        <View style={{ height: 100 }}>
+        <View >
             <View style={styles.main} >
                 <View style={styles.container}>
                     <Icon_Menu
@@ -27,7 +27,7 @@ export default function Header_Tile({ navigation, title }) {
                     />
                 </View>
                 <Text style={styles.text}>{title}</Text>
-                <View style={{ top: "100%", height: 40, width: "100%" }}>
+                {/* <View style={{ top: "100%", height: 40, width: "100%" }}>
                     <View style={styles.cont}>
                         <View style={styles.Container_down_logo}>
                             <Icon_Down size={18} style={styles.Logo_drawer_menu_black} />
@@ -43,7 +43,7 @@ export default function Header_Tile({ navigation, title }) {
                             <Icon_Right size={18} style={styles.logo_right} />
                         </View>
                     </View>
-                </View>
+                </View> */}
             </View>
         </View>
     )
