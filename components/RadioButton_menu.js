@@ -3,6 +3,10 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { RadioButton } from 'react-native-paper';
 import { Icon_Down, Icon_Up } from '../Icons/icon';
 
+//Меню выбора Риц
+
+
+//Варианты для выбора
 const props = [
     {
         key: 'Дашборд',
@@ -21,9 +25,10 @@ const props = [
 
 // Пока в разработке
 export const RadioButton_menu = () => {
-    const [open, setOpen] = React.useState(false);
-    const [state, setState] = React.useState('');
+    const [open, setOpen] = React.useState(false); // open - true если меню открыто, инача false
+    const [state, setState] = React.useState('');// Хранит в себе значение выбранного поля меню
 
+    //Если меню открыто, показываем его, иначе не показываем
     if (open) {
         return (
             <View>

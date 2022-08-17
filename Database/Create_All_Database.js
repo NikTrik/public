@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import * as SQLite from 'expo-sqlite'
 import '../Const/const'
 import {
@@ -30,7 +30,6 @@ import {
     GRAPHICS_SECTIONS_TABLE
 } from '../Const/const';
 
-import { Text } from 'react-native';
 //Запись поля Результат плитки
 
 
