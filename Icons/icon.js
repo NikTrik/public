@@ -9,7 +9,7 @@ import { View } from 'react-native';
 import styles from '../Style/Style';
 import { Settings_Menu } from '../components/Settings_Menu';
 import Create_All_Database from '../Database/Create_All_Database';
-
+import { RadioButton_menu } from '../components/RadioButton_menu'
 
 
 //Содержит все иконки в приложении с использованием библиотеки expo-vector-icons
@@ -170,15 +170,30 @@ export function Icon_Trash({ navigation, style, size }) {
 }
 
 //Иконка раздела меню выбора Риц - стрелочка вниз
-export function Icon_Down({ navigation, style, size }) {
+export function Icon_Up({ navigation, style, size, setOpen }) {
+    return (
+        <AntDesign
+            name="up"
+            size={size}
+            style={style}
+            onPress={() => setOpen(false)}
+        />
+    );
+}
+
+
+//Иконка раздела меню выбора Риц - стрелочка вниз
+export function Icon_Down({ navigation, style, size, setOpen }) {
     return (
         <AntDesign
             name="down"
             size={size}
             style={style}
+            onPress={() => setOpen(true)}
         />
     );
 }
+
 
 //Иконка раздела меню выбора месяца - стрелочка влево
 export function Icon_Left({ navigation, style, size }) {
@@ -187,6 +202,7 @@ export function Icon_Left({ navigation, style, size }) {
             name="left"
             size={size}
             style={style}
+            onPress={() => console.log(1)}
         />
     );
 }
@@ -198,6 +214,7 @@ export function Icon_Right({ navigation, style, size }) {
             name="right"
             size={size}
             style={style}
+            onPress={() => console.log(1)}
         />
     );
 }

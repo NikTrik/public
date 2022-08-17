@@ -10,7 +10,7 @@ import {
 import Loading from './Loading';
 import Tile from './Tile';
 import { get } from '../Database/Pars_data';
-import Create_All_Database, { get_data } from '../Database/Create_All_Database';
+import Create_All_Database, { getData, get_data } from '../Database/Create_All_Database';
 // Раздел Дашборд из меню навигации
 
 

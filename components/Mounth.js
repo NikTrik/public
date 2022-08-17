@@ -5,18 +5,55 @@ import { Icon_Down, Icon_Up } from '../Icons/icon';
 
 const props = [
     {
-        key: 'Дашборд',
-        text: 'Дашборд',
+        key: 'January',
+        text: 'Январь',
     },
     {
-        key: '509',
-        text: '509',
+        key: 'February',
+        text: 'Февраль',
     },
     {
-        key: '224',
-        text: '224',
-    }
+        key: 'April',
+        text: 'Апрель',
+    },
+    {
+        key: 'May',
+        text: 'Май',
+    },
+    {
+        key: 'June',
+        text: 'Июнь',
+    },
+    {
+        key: 'July',
+        text: 'Июль',
+    },
+    {
+        key: 'August',
+        text: 'Август',
+    },
+    {
+        key: 'September',
+        text: 'Сентябрь',
+    },
+    {
+        key: 'March',
+        text: 'Март',
+    },
+    {
+        key: 'October',
+        text: 'Октябрь',
+    },
+    {
+        key: 'November',
+        text: 'Ноябрь',
+    },
+    {
+        key: 'December',
+        text: 'Декабрь',
+    },
 ];
+
 
 
 // Пока в разработке

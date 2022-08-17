@@ -21,7 +21,13 @@ import {
     INSERT_INDICATORS_LIST_TABLE,
     INSERT_SECTIONS_TABLE,
     INSERT_INDICATORS_TABLE,
-    INSERT_GRAPHICS_TABLE
+    INSERT_GRAPHICS_TABLE,
+    CREATE_GRAPHICS_INDICATORS_TABLE,
+    INSERT_GRAPHICS_INDICATORS_TABLE,
+    GRAPHICS_INDICATORS_TABLE,
+    INSERT_GRAPHICS_SECTIONS_TABLE,
+    CREATE_GRAPHICS_SECTIONS_TABLE,
+    GRAPHICS_SECTIONS_TABLE
 } from '../Const/const';
 
 import { Text } from 'react-native';
@@ -40,7 +46,7 @@ function openDatabase() {
         };
     }
 
-    const db = SQLite.openDatabase("tile_27.db");
+    const db = SQLite.openDatabase("tile_015.db");
     return db;
 }
 
@@ -66,13 +72,13 @@ const setData = (data, INSERT_TABLE) => {
 
 
 //Чтение данных из таблицы (принимает имя таблицы которую нужно вывести)
-const getData = (TABLE_NAME) => {
+export const getData = (TABLE_NAME) => {
     db.transaction(
         (tx) => {
             tx.executeSql("select * from " + TABLE_NAME, [], (_, { rows }) => {
-                for (var i = 0; i < rows.length; i++) {
+                for (var i = 0; i < rows.length; i++)
                     console.log(rows.item(i));
-                }
+                console.log(rows.length)
             }
             );
         }
@@ -140,68 +146,85 @@ const parserResultIndicatorsList = (RESULT_INDICATORS_LIST) => {
     })
 }
 
-//считывает поле с именем РазрезыСписок и передаёт на запись в таблицу
-const parserSectionsList = (SECTION_LIST, id) => {
+//считывает поле с именем РазрезыСписок и передаёт на запись в таблицу, также передаётся index
+// чтобы указать первичный ключи в таблице SECTIONS
+//Добавил запись в таблицу связи между Графиками и Разрезами
+const parserSectionsList = (SECTION_LIST, id, index) => {
+
     SECTION_LIST.map((list) => {
         const ClassId = list.КлассИд;
         const Name_1 = list.Имя;
         const Name_2 = list.Наименование;
         var data = [];
-        data.push(id, ClassId, Name_1, Name_2);
+        data.push(ClassId, Name_1, Name_2, index + 1);
+        var data_2 = [];
+        data_2.push(index + 1, id);
+        index++;
         setData(data, INSERT_SECTIONS_TABLE);
+        setData(data_2, INSERT_GRAPHICS_SECTIONS_TABLE);
+
     });
 }
 
-//считывает поле с именем ПоказателиСписок и передаёт на запись в таблицу
-const parserIndicatorslist = (INDICATORS_LIST, id) => {
-    INDICATORS_LIST.map((list) => {
-        const ClassId = list.КлассИд;
+//считывает поле с именем ПоказателиСписок и передаёт на запись в таблицу, также передаётся результат ПоказателиСписок
+// чтобы задать таблицу связи между показателями и графиками 
+const parserIndicatorslist = (GRAPHICS_INDICATORS_TABLE, id, RESULT_INDICATORS_LIST) => {
+
+    var indicators_id = [];
+
+    RESULT_INDICATORS_LIST.map((obj, index) => {
+        indicators_id[index] = obj.Ид;
+        return index + 1;
+    });
+
+    var len = indicators_id.length;
+
+    GRAPHICS_INDICATORS_TABLE.map((list) => {
         const ID = list.Ид;
-        const Class = list.Класс;
-        const Un_of_m = list.ЕдИзм;
-        const Name_1 = list.Имя;
-        const Name_2 = list.Наименование;
-        const input = list.Вводимый;
+
+        for (var i = 0; i < len; i++)
+            if (ID == indicators_id[i])
+                break;
+
         var data = [];
-        data.push(id, ClassId, ID, Class, Un_of_m, Name_1, Name_2, input)
-        setData(data, INSERT_INDICATORS_TABLE);
+        data.push(ID, id);
+        setData(data, INSERT_GRAPHICS_INDICATORS_TABLE);
     });
 }
 
 //считывает поле с именем Результат_ГрафикиСписок и передаёт на запись в таблицу
-const parserResultGraphicsList = (RESULT_GRAPHICS_LIST) => {
-    RESULT_GRAPHICS_LIST.map((tile) => {
+const parserResultGraphicsList = (RESULT_GRAPHICS_LIST, RESULT_INDICATORS_LIST) => {
+    RESULT_GRAPHICS_LIST.map((tile, index) => {
         const Id = tile.Ид;
         const ClassId = tile.КлассИд;
         const General_graph_type = tile.ОбщийТипГрафика;
-        const Indicators_list = tile.ПоказателиСписок.length;
         const Periodicity = tile.Периодичности;
         const Default_period_name = tile.ПериодПоУмолчаниюИмя;
         const Default_period_size = tile.ПериодПоУмолчаниюРазмер;
         const Tabular_display = tile.ТабличноеОтображение;
         const Quick_access = tile.БыстрыйДоступ;
-        const Sections_list = tile.РазрезыСписок.length;
         const Name = tile.Наименование;
         const Chart_type = tile.ТипГрафика;
         const Comment = tile.Комментарий;
-        const INDICATORS_LIST = tile.ПоказателиСписок;
+        const GRAPHICS_INDICATORS_TABLE = tile.ПоказателиСписок;
         const SECTION_LIST = tile.РазрезыСписок;
-        parserIndicatorslist(INDICATORS_LIST, Id);
-        parserSectionsList(SECTION_LIST, Id);
+        parserIndicatorslist(GRAPHICS_INDICATORS_TABLE, Id, RESULT_INDICATORS_LIST);
+        parserSectionsList(SECTION_LIST, Id, index);
         var data = [];
-        data.push(Id, ClassId, General_graph_type, Indicators_list, Periodicity, Default_period_name,
-            Default_period_size, Tabular_display, Quick_access, Sections_list, Name, Chart_type, Comment);
+        data.push(Id, ClassId, General_graph_type, Periodicity, Default_period_name,
+            Default_period_size, Tabular_display, Quick_access, Name, Chart_type, Comment);
         setData(data, INSERT_GRAPHICS_TABLE);
+        return index + 1;
     })
 }
 
 
 //Запрос данных с сервера
 export async function get_data() {
-    console.log(1);
+    // deleteAllDataBase();
     const resp = await axios.get(' https://api-ric999.clients.oe-it.ru/clt/1n', {
         params: {
-            ssid: "35353B2963C914935554746FA645F6C6D313B29D07F808AD9FBE01E4B685530C",
+            ssid: "0336CF90130F4B91632A639137B2953E459CDADFD92FD5288793955012F36292",
             method: "ПлиткиСписок",
             "парОграничение.json": JSON.stringify({
                 "ПараметрыЗапросаСхемы": {
@@ -210,7 +233,7 @@ export async function get_data() {
                 }
             })
         }
-    })
+    }).catch((error) => console.log(error));
     const newdate = resp.data.result;
     newdate.map((tile, index) => {
         const RESULT_TILE = tile.Результат_Плитки;
@@ -220,37 +243,11 @@ export async function get_data() {
         parserResultTile(RESULT_TILE);
         parserResultCategoriesList(RESULT_CATEGORIES_LIST);
         parserResultIndicatorsList(RESULT_INDICATORS_LIST);
-        parserResultGraphicsList(RESULT_GRAPHICS_LIST);
-    })
-    return resp;
-}
-
-// Позволяет вынуть данные из таблицы в не промиса (принимает переменную базы данных и имя таблицы из которой нужно считать данные)
-function read(TABLE_NAME) {
-    const [Result, setResult] = useState('');
-
-    useEffect(() => {
-        get(TABLE_NAME).then((data) => {
-            setResult(data)
-        }).catch((error) => console.log(error))
-    }, [])
-
-    return Result;
-}
-
-// Считывает данные из таблицы в промис (принимает переменную базы данных и имя таблицы из которой нужно считать данные)
-async function get(TABLE_NAME) {
-    return new Promise((resolve, reject) => {
-        db.transaction(
-            (tx) => {
-                tx.executeSql("select * from " + TABLE_NAME, [], (_, { rows }) => {
-                    var data = rows._array;
-                    resolve(data);
-                })
-            }
-        )
+        parserResultGraphicsList(RESULT_GRAPHICS_LIST, RESULT_INDICATORS_LIST);
     })
 }
+
+
 
 //Создание всех таблиц
 function createTables() {
@@ -258,8 +255,20 @@ function createTables() {
     createTable(CREATE_CATEGORIES_TABLE);
     createTable(CREATE_INDICATORS_LIST_TABLE);
     createTable(CREATE_GRAPHICS_TABLE);
-    createTable(CREATE_INDICATORS_TABLE);
     createTable(CREATE_SECTIONS_TABLE);
+    createTable(CREATE_GRAPHICS_INDICATORS_TABLE);
+    createTable(CREATE_GRAPHICS_SECTIONS_TABLE);
+}
+
+//Очистить все таблицы
+function deleteAllDataBase() {
+    deleteData(CATEGORIES_TABLE);
+    deleteData(RESULT_TILE_TABLE);
+    deleteData(RESULT_INDICATORS_LIST_TABLE);
+    deleteData(RESULT_GRAPHICS_LIST_TABLE);
+    deleteData(GRAPHICS_INDICATORS_TABLE);
+    deleteData(SECTIONS_LIST_TABLE);
+    deleteData(GRAPHICS_SECTIONS_TABLE);
 }
 
 
@@ -269,11 +278,9 @@ export default function Create_All_Database() {
     //Создание всех таблиц
     createTables();
 
-    //get_data();// делает запрос и записывает его в таблицы 
+    get_data();// делает запрос и записывает его в таблицы
 
-    //var dt = read(TABLE_NAME);// В эту пеерменную будет записываться массив объектов содержащих в себе строки таблицы
+    //getData(GRAPHICS_SECTIONS_TABLE); // выводит данные из таблицы по её имени
 
-    getData(RESULT_TILE_TABLE); // выводит данные из таблицы по её имени
-    //deleteData(); 
-    //return dt;
+    //deleteAllDataBase(); // Очистить все таблицы
 }

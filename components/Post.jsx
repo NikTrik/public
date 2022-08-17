@@ -57,7 +57,8 @@ const PostDetails =styled.View`
 
 
 export const Post = ({title, CategoryId, un, color}) => {
-    return <BackGround>
+    return (
+    <BackGround>
     
     <PostView borderTopColor = {color}>
     
@@ -71,4 +72,5 @@ export const Post = ({title, CategoryId, un, color}) => {
       </PostDetails>
     </PostView>
   </BackGround>
+    )
 }

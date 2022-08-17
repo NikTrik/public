@@ -104,7 +104,7 @@ const styles = StyleSheet.create(
         text_point_menu: {
             fontSize: 18,
             textAlign: 'center',
-            bottom: "40%"
+            top: "15%"
         },
         text_point_menu_2: {
             fontSize: 18,
@@ -115,7 +115,7 @@ const styles = StyleSheet.create(
             width: 20,
             height: 20,
             left: '72%',
-            top: '25%'
+            bottom: '35%'
         },
         container_left_logo: {
             position: 'absolute',
@@ -137,10 +137,15 @@ const styles = StyleSheet.create(
         },
         logo_left: {
             position: 'absolute',
-            left: "30%"
+            left: "30%",
         },
         RadioButton_menu: {
-
+            width: 170,
+            height: 140,
+            position: 'absolute',
+            right: -15,
+            top: 25,
+            backgroundColor: 'silver'
         }
     }
 )
