@@ -181,6 +181,7 @@ export const CREATE_GRAPHICS_INDICATORS_TABLE =
     + " PRIMARY KEY (" + GRAPHICS_INDICATORS_COLUMN_INDICATORS_ID + ", "
     + GRAPHICS_COLUMN_GRAPHICS_INDICATORS_ID + "))";
 
+//Запрос для добавления в таблицу связи Графиков и Показателей
 export const INSERT_GRAPHICS_INDICATORS_TABLE =
     "INSERT INTO " + GRAPHICS_INDICATORS_TABLE
     + " (" + GRAPHICS_INDICATORS_COLUMN_INDICATORS_ID + ", "
@@ -265,7 +266,7 @@ export const GRAPHICS_SECTIONS_TABLE = "GRAPHICS_SECTIONS";
 export const GRAPHICS_SECTIONS_COLUMN_SECTIONS_ID = 'GRAPHICS_SECTIONS_SECTIONS_ID';
 export const GRAPHICS_COLUMN_GRAPHICS_ID = 'GRAPHICS_COLUMN_GRAPHICS_ID';
 
-//Создание таблицы связи между Показателями и графиками 
+//Создание таблицы связи между Разрезами и графиками 
 export const CREATE_GRAPHICS_SECTIONS_TABLE =
     "CREATE TABLE IF NOT EXISTS " + GRAPHICS_SECTIONS_TABLE
     + " (" + GRAPHICS_SECTIONS_COLUMN_SECTIONS_ID + " INTEGER, "
@@ -273,6 +274,8 @@ export const CREATE_GRAPHICS_SECTIONS_TABLE =
     + " PRIMARY KEY (" + GRAPHICS_SECTIONS_COLUMN_SECTIONS_ID + ", "
     + GRAPHICS_COLUMN_GRAPHICS_ID + "))";
 
+
+//Запрос для добавления в таблицу связи Графиков и Разрезов
 export const INSERT_GRAPHICS_SECTIONS_TABLE =
     "INSERT INTO " + GRAPHICS_SECTIONS_TABLE
     + " (" + GRAPHICS_SECTIONS_COLUMN_SECTIONS_ID + ", "
