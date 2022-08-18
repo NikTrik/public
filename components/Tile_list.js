@@ -57,6 +57,7 @@ const Tile_list = ({ navigation, state = false }) => {
     const [IsLoading, setIsLoading] = useState(false); // isLoading - хранит состояние загрузки
     // true - запрос ещё обрабатывается, false - данные готовы к отрисовке
 
+
     g(setResult, setIsLoading);// функция получения результата из базы данных
 
 

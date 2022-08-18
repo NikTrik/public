@@ -31,7 +31,7 @@ export const INSERT_CATEGORIES_TABLE =
     + CATEGORIES_COLUMN_COLOR + ", "
     + CATEGORIES_COLUMN_FULLNAME + ", "
     + CATEGORIES_COLUMN_RIC + ")"
-    + " VALUES (?,?,?,?,?,?,?)";
+    + " VALUES ";
 
 //------------------------------------------------------------------\\
 
@@ -74,7 +74,7 @@ export const INSERT_TILE_TABLE =
     + TILE_COLUMN_FULLNAME + ", "
     + TILE_COLUMN_CATEGORY_ID + ", "
     + TILE_COLUMN_RIC + ") "
-    + "VALUES (?,?,?,?,?,?,?,?,?)";
+    + "VALUES "
 
 //------------------------------------------------------------------\\
 
@@ -114,7 +114,7 @@ export const INSERT_INDICATORS_LIST_TABLE =
     + INDICATORS_LIST_COLUMN_UNITS_OF_MEASUREMENT + ", "
     + INDICATORS_LIST_COLUMN_DESCRIPTION + ", "
     + INDICATORS_LIST_COLUMN_INPUT + ") "
-    + "VALUES (?,?,?,?,?,?,?,?)";
+    + "VALUES ";
 
 //------------------------------------------------------------------\\
 
@@ -163,7 +163,7 @@ export const INSERT_GRAPHICS_TABLE =
     + GRAPHICS_COLUMN_FULLNAME + ", "
     + GRAPHICS_COLUMN_TYPE_GRAPH + ", "
     + GRAPHICS_COLUMN_COMMENT + ") "
-    + "VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+    + "VALUES ";
 
 //------------------------------------------------------------------\\
 
@@ -186,7 +186,7 @@ export const INSERT_GRAPHICS_INDICATORS_TABLE =
     "INSERT INTO " + GRAPHICS_INDICATORS_TABLE
     + " (" + GRAPHICS_INDICATORS_COLUMN_INDICATORS_ID + ", "
     + GRAPHICS_COLUMN_GRAPHICS_INDICATORS_ID + ") "
-    + "VALUES (?,?)";
+    + "VALUES ";
 
 
 // //Таблица поля ПоказателиСписок
@@ -256,7 +256,7 @@ export const INSERT_SECTIONS_TABLE =
     + SECTIONS_COLUMN_NAME + ", "
     + SECTIONS_COLUMN_FULLNAME + ", "
     + SECTIONS_COLUMN_ID + ") "
-    + "VALUES (?,?,?,?)"
+    + "VALUES "
 
 //------------------------------------------------------------------\\
 
@@ -280,4 +280,4 @@ export const INSERT_GRAPHICS_SECTIONS_TABLE =
     "INSERT INTO " + GRAPHICS_SECTIONS_TABLE
     + " (" + GRAPHICS_SECTIONS_COLUMN_SECTIONS_ID + ", "
     + GRAPHICS_COLUMN_GRAPHICS_ID + ") "
-    + "VALUES (?,?)";
+    + "VALUES ";

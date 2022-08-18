@@ -29,7 +29,6 @@ import {
     CREATE_GRAPHICS_SECTIONS_TABLE,
     GRAPHICS_SECTIONS_TABLE
 } from '../Const/const';
-
 //Запись поля Результат плитки
 
 
@@ -45,7 +44,7 @@ function openDatabase() {
         };
     }
 
-    const db = SQLite.openDatabase("tile_015.db");
+    const db = SQLite.openDatabase("tile_017.db");
     return db;
 }
 
@@ -61,10 +60,10 @@ const createTable = (CREATE_TABLE) => {
 };
 
 //Запись данных в таблицу (принимает массив данных который нужно записать и запрос на запись)
-const setData = (data, INSERT_TABLE) => {
+const setData = (data, INSERT_TABLE, str) => {
     db.transaction(
         (tx) => {
-            tx.executeSql(INSERT_TABLE, data);
+            tx.executeSql(INSERT_TABLE + str + ' ; ', data);
         }
     );
 }
@@ -95,6 +94,8 @@ const deleteData = (TABLE_NAME) => {
 
 //считывает поле с именем Результат_Плитки и передаёт на запись в таблицу
 const parserResultTile = (RESULT_TILE) => {
+    var data = [];
+    var str = '';
     RESULT_TILE.map((tile) => {
         const Id = tile.Ид;
         const ClassId = tile.КлассИд;
@@ -105,15 +106,17 @@ const parserResultTile = (RESULT_TILE) => {
         const Name = tile.Наименование;
         const Id_category = tile.КатегорияИд;
         const RIC = 999;
-        var data = [];
         data.push(Id, ClassId, Id_value_indicator, Additional_Charts, Un_of_m,
-            Default_schedule, Name, Id_category, RIC)
-        setData(data, INSERT_TILE_TABLE);
-    })
+            Default_schedule, Name, Id_category, RIC);// записываем все данные в один массив 
+        str += "(?,?,?,?,?,?,?,?,?), ";// для каждого объекта добавляем в запрос место под запись
+    });
+    setData(data, INSERT_TILE_TABLE, str.slice(0, -2));
 }
 
 //считывает поле с именем Результат_КатегорииСписок и передаёт на запись в таблицу
 const parserResultCategoriesList = (RESULT_CATEGORIES_LIST) => {
+    var data = [];
+    var str = '';
     RESULT_CATEGORIES_LIST.map((tile) => {
         const Id = tile.Ид;
         const ClassId = tile.КлассИд;
@@ -122,14 +125,17 @@ const parserResultCategoriesList = (RESULT_CATEGORIES_LIST) => {
         const Colour = tile.Цвет;
         const Name_2 = tile.Наименование;
         const RIC = 999;
-        var data = [];
-        data.push(Id, ClassId, Name_1, Colour16, Colour, Name_2, RIC)
-        setData(data, INSERT_CATEGORIES_TABLE);
+        data.push(Id, ClassId, Name_1, Colour16, Colour, Name_2, RIC);
+        str += "(?,?,?,?,?,?,?), ";
     })
+    setData(data, INSERT_CATEGORIES_TABLE, str.slice(0, -2));
 }
 
 //считывает поле с именем Результат_ПоказателиСписок и передаёт на запись в таблицу
 const parserResultIndicatorsList = (RESULT_INDICATORS_LIST) => {
+    var data = [];
+    var str = "";
+    var mas_obj = []
     RESULT_INDICATORS_LIST.map((tile) => {
         const Id = tile.Ид;
         const ClassId = tile.КлассИд;
@@ -139,30 +145,40 @@ const parserResultIndicatorsList = (RESULT_INDICATORS_LIST) => {
         const Un_of_m = tile.ЕдИзм;
         const Description = tile.Описание;
         const Input = tile.Вводимый;
-        var data = [];
-        data.push(Id, ClassId, Name_1, Short_name, Name_2, Un_of_m, Description, Input)
-        setData(data, INSERT_INDICATORS_LIST_TABLE);
+        var flag = false;
+        for (var i = 0; i < mas_obj.length; i++)
+            if (JSON.stringify(mas_obj[i]) === JSON.stringify(tile))
+                flag = true;
+        if (!flag) {
+            mas_obj.push(tile);
+            data.push(Id, ClassId, Name_1, Short_name, Name_2, Un_of_m, Description, Input);
+            str += "(?,?,?,?,?,?,?,?), ";
+        }
     })
+    setData(data, INSERT_INDICATORS_LIST_TABLE, str.slice(0, -2));
+
 }
 
 //считывает поле с именем РазрезыСписок и передаёт на запись в таблицу, также передаётся index
 // чтобы указать первичный ключи в таблице SECTIONS
 //Добавил запись в таблицу связи между Графиками и Разрезами
 const parserSectionsList = (SECTION_LIST, id, index) => {
-
+    var data1 = [];
+    var data2 = [];
+    var str1 = '';
+    var str2 = '';
     SECTION_LIST.map((list) => {
         const ClassId = list.КлассИд;
         const Name_1 = list.Имя;
         const Name_2 = list.Наименование;
-        var data = [];
-        data.push(ClassId, Name_1, Name_2, index + 1);
-        var data_2 = [];
-        data_2.push(index + 1, id);
+        data1.push(ClassId, Name_1, Name_2, index + 1);
+        str1 += "(?,?,?,?), ";
+        data2.push(index + 1, id);
         index++;
-        setData(data, INSERT_SECTIONS_TABLE);
-        setData(data_2, INSERT_GRAPHICS_SECTIONS_TABLE);
-
+        str2 += "(?,?), ";
     });
+    setData(data1, INSERT_SECTIONS_TABLE, str1.slice(0, -2));
+    setData(data2, INSERT_GRAPHICS_SECTIONS_TABLE, str2.slice(0, -2));
 }
 
 //считывает поле с именем ПоказателиСписок и передаёт на запись в таблицу, также передаётся результат ПоказателиСписок
@@ -178,6 +194,8 @@ const parserIndicatorslist = (GRAPHICS_INDICATORS_TABLE, id, RESULT_INDICATORS_L
 
     var len = indicators_id.length;
 
+    var data = [];
+    var str = "";
     GRAPHICS_INDICATORS_TABLE.map((list) => {
         const ID = list.Ид;
 
@@ -185,14 +203,17 @@ const parserIndicatorslist = (GRAPHICS_INDICATORS_TABLE, id, RESULT_INDICATORS_L
             if (ID == indicators_id[i])
                 break;
 
-        var data = [];
         data.push(ID, id);
-        setData(data, INSERT_GRAPHICS_INDICATORS_TABLE);
+        str += "(?,?), "
     });
+
+    setData(data, INSERT_GRAPHICS_INDICATORS_TABLE, str.slice(0, -2));
 }
 
 //считывает поле с именем Результат_ГрафикиСписок и передаёт на запись в таблицу
 const parserResultGraphicsList = (RESULT_GRAPHICS_LIST, RESULT_INDICATORS_LIST) => {
+    var data = [];
+    var str = "";
     RESULT_GRAPHICS_LIST.map((tile, index) => {
         const Id = tile.Ид;
         const ClassId = tile.КлассИд;
@@ -209,12 +230,13 @@ const parserResultGraphicsList = (RESULT_GRAPHICS_LIST, RESULT_INDICATORS_LIST) 
         const SECTION_LIST = tile.РазрезыСписок;
         parserIndicatorslist(GRAPHICS_INDICATORS_TABLE, Id, RESULT_INDICATORS_LIST);
         parserSectionsList(SECTION_LIST, Id, index);
-        var data = [];
         data.push(Id, ClassId, General_graph_type, Periodicity, Default_period_name,
             Default_period_size, Tabular_display, Quick_access, Name, Chart_type, Comment);
-        setData(data, INSERT_GRAPHICS_TABLE);
+        str += "(?,?,?,?,?,?,?,?,?,?,?), ";
         return index + 1;
-    })
+    });
+
+    setData(data, INSERT_GRAPHICS_TABLE, str.slice(0, -2));
 }
 
 
@@ -270,16 +292,17 @@ function deleteAllDataBase() {
     deleteData(GRAPHICS_SECTIONS_TABLE);
 }
 
+const allTableName = [CATEGORIES_TABLE, RESULT_TILE_TABLE, RESULT_INDICATORS_LIST_TABLE, RESULT_GRAPHICS_LIST_TABLE,
+    GRAPHICS_INDICATORS_TABLE, SECTIONS_LIST_TABLE, GRAPHICS_SECTIONS_TABLE]
 
 export default function Create_All_Database() {
     console.log('-----------------------');
-
     //Создание всех таблиц
     createTables();
 
-    get_data();// делает запрос и записывает его в таблицы
+    //get_data();// делает запрос и записывает его в таблицы
 
-    //getData(GRAPHICS_SECTIONS_TABLE); // выводит данные из таблицы по её имени
+    getData(RESULT_TILE_TABLE); // выводит данные из таблицы по её имени
 
     //deleteAllDataBase(); // Очистить все таблицы
 }
