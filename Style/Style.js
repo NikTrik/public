@@ -50,8 +50,10 @@ const styles = StyleSheet.create(
             position: 'absolute',
             width: 24,
             height: 24,
-            top: '46%',
-            right: "10%"
+            top: -67,
+            right: "10%",
+            zIndex: 1
+
         },
         Logo_Exit: {
             color: "#3a4357"
@@ -146,6 +148,13 @@ const styles = StyleSheet.create(
             right: -15,
             top: 25,
             backgroundColor: 'silver'
+        },
+        content: {
+            position: 'absolute',
+            top: 10,
+            width: 40,
+            height: 40,
+            backgroundColor: 'green'
         }
     }
 )

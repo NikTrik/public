@@ -1,7 +1,9 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { RadioButton } from 'react-native-paper';
 import { Icon_Down, Icon_Up } from '../Icons/icon';
+import styles from '../Style/Style';
+import { Icon_Left, Icon_Right } from '../Icons/icon';
 
 const props = [
     {
@@ -54,57 +56,42 @@ const props = [
     },
 ];
 
+var numb = 7;
 
 
-// Пока в разработке
-export const RadioButton_menu = () => {
-    const [open, setOpen] = React.useState(false);
-    const [state, setState] = React.useState('');
+// Пока в разработкеs
+export const Mounth = () => {
 
-    if (open) {
-        return (
-            <View>
-                <View style={styles.Container_down_logo}>
-                    <Icon_Up
-                        size={18}
-                        style={styles.Logo_drawer_menu_black}
-                        setOpen={setOpen}
-                    />
-                </View>
-                <View style={styles.container1}>
-                    <View>
-                        {props.map(res => {
-                            return (
-                                <View key={res.key} style={styles.container}>
-                                    <Text style={styles.radioText}>{res.text}</Text>
-                                    <TouchableOpacity
-                                        style={styles.radioCircle}
-                                        onPress={() => {
-                                            setState(res.key);
-                                        }}>
-                                        {state === res.key && <View style={styles.selectedRb} />}
-                                    </TouchableOpacity>
-                                </View>
-                            );
-                        })}
-                        <Text> Selected: {state} </Text>
-                    </View>
-                </View>
-            </View>
-        );
-    }
+    const [Num, setNum] = useState(2);
+
+    console.log(Num);
+
+    const mounths = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
+
     return (
-        <View style={styles.Container_down_logo}>
-            <Icon_Down
-                size={18}
-                style={styles.Logo_drawer_menu_black}
-                setOpen={setOpen}
-            />
+        <View style={styles.cont2}>
+            <Text style={styles.text_point_menu_2}>{mounths[Num]}</Text>
+            <View style={styles.container_left_logo}>
+                <Icon_Left
+                    size={18}
+                    style={styles.logo_left}
+                    setNum={setNum}
+                    Num={Num}
+                />
+            </View>
+            <View style={styles.container_right_logo}>
+                <Icon_Right
+                    size={18}
+                    style={styles.logo_right}
+                    setNum={setNum}
+                    Num={Num}
+                />
+            </View>
         </View>
-    );
 
+    );
 }
-const styles = StyleSheet.create({
+const styles1 = StyleSheet.create({
     container1: {
         position: 'absolute',
         width: 160,

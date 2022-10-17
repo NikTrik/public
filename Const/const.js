@@ -281,3 +281,28 @@ export const INSERT_GRAPHICS_SECTIONS_TABLE =
     + " (" + GRAPHICS_SECTIONS_COLUMN_SECTIONS_ID + ", "
     + GRAPHICS_COLUMN_GRAPHICS_ID + ") "
     + "VALUES ";
+
+//------------------------------------------------------------------\\
+
+//Таблица актуальных значений плиток
+export const CURRENT_TILE_VALUES_TABLE = 'TILE_VALUES';
+
+export const CURRENT_TILE_VALUES_COLUMN_ID = 'CURRENT_TILE_VALUES_ID';
+export const CURRENT_TILE_VALUES_COLUMN_VALUE = 'CURRENT_TILE_VALUES_VALUE';
+export const CURRENT_TILE_VALUES_COLUMN_DATE = 'CURRENT_TILE_VALUES_DATE';
+
+//Создать таблицу актуальных значений плиток
+export const CREATE_CURRENT_TILE_VALUES_TABLE =
+    "CREATE TABLE IF NOT EXISTS " + CURRENT_TILE_VALUES_TABLE
+    + " (" + CURRENT_TILE_VALUES_COLUMN_ID + " INTEGER, "
+    + CURRENT_TILE_VALUES_COLUMN_VALUE + " VARCHAR(255), "
+    + CURRENT_TILE_VALUES_COLUMN_DATE + " VARCHAR(255), "
+    + " PRIMARY KEY (" + CURRENT_TILE_VALUES_COLUMN_ID + "))";
+
+//Вставить в таблицу актуальных значений плиток
+export const INSERT_CURRENT_TILE_VALUES_TABLE =
+    "INSERT INTO " + CURRENT_TILE_VALUES_TABLE
+    + " (" + CURRENT_TILE_VALUES_COLUMN_ID + ", "
+    + CURRENT_TILE_VALUES_COLUMN_VALUE + ", "
+    + CURRENT_TILE_VALUES_COLUMN_DATE + ") "
+    + "VALUES (?,?,?)";

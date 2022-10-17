@@ -196,25 +196,33 @@ export function Icon_Down({ navigation, style, size, setOpen }) {
 
 
 //Иконка раздела меню выбора месяца - стрелочка влево
-export function Icon_Left({ navigation, style, size }) {
+export function Icon_Left({ navigation, style, size, setNum, Num }) {
     return (
         <AntDesign
             name="left"
             size={size}
             style={style}
-            onPress={() => console.log(1)}
+            onPress={() => {
+                if (Num == 0)
+                    Num = 12;
+                setNum(Num - 1);
+            }}
         />
     );
 }
 
 //Иконка раздела меню выбора месяца - стрелочка вправо
-export function Icon_Right({ navigation, style, size }) {
+export function Icon_Right({ navigation, style, size, setNum, Num }) {
     return (
         <AntDesign
             name="right"
             size={size}
             style={style}
-            onPress={() => console.log(1)}
+            onPress={() => {
+                if (Num == 11)
+                    Num = -1;
+                setNum(Num + 1);
+            }}
         />
     );
 }

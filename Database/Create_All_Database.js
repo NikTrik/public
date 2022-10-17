@@ -27,8 +27,13 @@ import {
     GRAPHICS_INDICATORS_TABLE,
     INSERT_GRAPHICS_SECTIONS_TABLE,
     CREATE_GRAPHICS_SECTIONS_TABLE,
-    GRAPHICS_SECTIONS_TABLE
+    GRAPHICS_SECTIONS_TABLE,
+    CURRENT_TILE_VALUES_TABLE,
+    CREATE_CURRENT_TILE_VALUES_TABLE,
+    INSERT_CURRENT_TILE_VALUES_TABLE
 } from '../Const/const';
+import { read } from './Pars_data';
+
 //Запись поля Результат плитки
 
 
@@ -245,7 +250,7 @@ export async function get_data() {
     // deleteAllDataBase();
     const resp = await axios.get(' https://api-ric999.clients.oe-it.ru/clt/1n', {
         params: {
-            ssid: "0336CF90130F4B91632A639137B2953E459CDADFD92FD5288793955012F36292",
+            ssid: "35353B2963C914935554746FA645F6C6D313B29D07F808AD9FBE01E4B685530C",
             method: "ПлиткиСписок",
             "парОграничение.json": JSON.stringify({
                 "ПараметрыЗапросаСхемы": {
@@ -254,20 +259,59 @@ export async function get_data() {
                 }
             })
         }
-    }).catch((error) => console.log(error));
-    const newdate = resp.data.result;
-    newdate.map((tile, index) => {
-        const RESULT_TILE = tile.Результат_Плитки;
-        const RESULT_CATEGORIES_LIST = tile.Результат_КатегорииСписок;
-        const RESULT_INDICATORS_LIST = tile.Результат_ПоказателиСписок;
-        const RESULT_GRAPHICS_LIST = tile.Результат_ГрафикиСписок;
-        parserResultTile(RESULT_TILE);
-        parserResultCategoriesList(RESULT_CATEGORIES_LIST);
-        parserResultIndicatorsList(RESULT_INDICATORS_LIST);
-        parserResultGraphicsList(RESULT_GRAPHICS_LIST, RESULT_INDICATORS_LIST);
+    }).then((resp) => {
+        const newdate = resp.data.result;
+        newdate.map((tile, index) => {
+            const RESULT_TILE = tile.Результат_Плитки;
+            const RESULT_CATEGORIES_LIST = tile.Результат_КатегорииСписок;
+            const RESULT_INDICATORS_LIST = tile.Результат_ПоказателиСписок;
+            const RESULT_GRAPHICS_LIST = tile.Результат_ГрафикиСписок;
+            parserResultTile(RESULT_TILE);
+            parserResultCategoriesList(RESULT_CATEGORIES_LIST);
+            parserResultIndicatorsList(RESULT_INDICATORS_LIST);
+            parserResultGraphicsList(RESULT_GRAPHICS_LIST, RESULT_INDICATORS_LIST);
+        })
     })
+        .catch((error) => console.log(error))
+        .finally(() => { console.log('----------------------------------------------') });
+
 }
 
+async function getValues() {
+
+    var date = new Date().getDate();
+    var month = new Date().getMonth() + 1;
+    var year = new Date().getFullYear();
+
+    const dt = await read(RESULT_TILE_TABLE);
+
+
+    dt.map(async (tile) => {
+        const resp = await axios.get(' https://api-ric999.clients.oe-it.ru/clt/1n', {
+            params: {
+                ssid: "0336CF90130F4B91632A639137B2953E459CDADFD92FD5288793955012F36292",
+                method: "ПлиткиЗначение",
+                "парПериоды": '[{"Дата":"' + date + '.' + month + '.' + year + '","Периодичность":"","Смещение":0}]',
+                "парПлитки": tile.TILE_ID,
+                "парГрафик": '',
+                "парЗначенияРазрезов": '',
+                "парОграничение.json": JSON.stringify({
+                    "ПараметрыЗапросаСхемы": {
+                        "Приложение": "11181849"
+                    }
+                })
+            }
+        }).catch((error) => console.log(error));
+        const d = resp.data.result;
+        d.map((tx) => {
+            t = tx.ПоказателиСписок;
+            var res = t[0].ПоказательСтрокой;
+            var data = [tile.TILE_ID, res, date + '.' + month + '.' + year];
+            setData(data, INSERT_CURRENT_TILE_VALUES_TABLE);
+        })
+    })
+
+}
 
 
 //Создание всех таблиц
@@ -279,6 +323,7 @@ function createTables() {
     createTable(CREATE_SECTIONS_TABLE);
     createTable(CREATE_GRAPHICS_INDICATORS_TABLE);
     createTable(CREATE_GRAPHICS_SECTIONS_TABLE);
+    createTable(CREATE_CURRENT_TILE_VALUES_TABLE);
 }
 
 //Очистить все таблицы
@@ -290,10 +335,11 @@ function deleteAllDataBase() {
     deleteData(GRAPHICS_INDICATORS_TABLE);
     deleteData(SECTIONS_LIST_TABLE);
     deleteData(GRAPHICS_SECTIONS_TABLE);
+    deleteData(CURRENT_TILE_VALUES_TABLE);
 }
 
 const allTableName = [CATEGORIES_TABLE, RESULT_TILE_TABLE, RESULT_INDICATORS_LIST_TABLE, RESULT_GRAPHICS_LIST_TABLE,
-    GRAPHICS_INDICATORS_TABLE, SECTIONS_LIST_TABLE, GRAPHICS_SECTIONS_TABLE]
+    GRAPHICS_INDICATORS_TABLE, SECTIONS_LIST_TABLE, GRAPHICS_SECTIONS_TABLE, CURRENT_TILE_VALUES_TABLE]
 
 export default function Create_All_Database() {
     console.log('-----------------------');

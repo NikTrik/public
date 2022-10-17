@@ -5,7 +5,7 @@ import * as SQLite from 'expo-sqlite'
 
 
 // Позволяет вынуть данные из таблицы в не промиса (принимает переменную базы данных и имя таблицы из которой нужно считать данные)
-function read(TABLE_NAME) {
+export async function read(TABLE_NAME) {
     const [Result, setResult] = useState('');
 
     useEffect(() => {
